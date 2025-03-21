@@ -13,6 +13,10 @@ import {
   loadCSS,
 } from './aem.js';
 
+import {
+  setConfig,
+} from '../utils/utils.js';
+
 /**
  * Builds hero block and prepends to main in a new section.
  * @param {Element} main The container element
@@ -120,7 +124,13 @@ function loadDelayed() {
   // load anything that can be postponed to the latest here
 }
 
+const config = {
+  codeRoot: '/',
+};
+
 async function loadPage() {
+  setConfig(config);
+
   await loadEager(document);
   await loadLazy(document);
   loadDelayed();
