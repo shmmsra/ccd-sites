@@ -13,9 +13,17 @@ import {
   loadCSS,
 } from './aem.js';
 
-import {
-  setConfig,
-} from '../utils/helper.js';
+function setConfig(config = {}) {
+  const CONFIG = {
+    contentRoot: "/",
+    codeRoot: "/",
+    miloLibs: window.location.origin
+  };
+
+  window.hlx = window.hlx || {};
+  window.hlx.config = { ...CONFIG, ...config };
+  return window.hlx.config;
+}
 
 /**
  * Builds hero block and prepends to main in a new section.
@@ -114,16 +122,6 @@ async function loadLazy(doc) {
   loadFonts();
 }
 
-/**
- * Loads everything that happens a lot later,
- * without impacting the user experience.
- */
-function loadDelayed() {
-  // eslint-disable-next-line import/no-cycle
-  window.setTimeout(() => import('./delayed.js'), 3000);
-  // load anything that can be postponed to the latest here
-}
-
 const config = {
   codeRoot: '/',
   codeBasePath: '',
@@ -133,7 +131,6 @@ async function loadPage() {
   setConfig(config);
   await loadEager(document);
   await loadLazy(document);
-  loadDelayed();
 }
 
 loadPage();
