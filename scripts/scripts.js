@@ -15,7 +15,7 @@ import {
 
 import {
   setConfig,
-} from '../utils/utils.js';
+} from '../utils/helper.js';
 
 /**
  * Builds hero block and prepends to main in a new section.
@@ -126,11 +126,11 @@ function loadDelayed() {
 
 const config = {
   codeRoot: '/',
+  codeBasePath: '',
 };
 
 async function loadPage() {
   setConfig(config);
-
   await loadEager(document);
   await loadLazy(document);
   loadDelayed();

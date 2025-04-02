@@ -48,8 +48,8 @@ function decorateQr(el) {
 
 export default async function init(el) {
   if (el.className.includes('rounded-corners')) {
-    const { miloLibs, codeRoot } = getConfig();
-    const base = miloLibs || codeRoot;
+    const config = getConfig();
+    const base = config?.miloLibs || config?.codeRoot || '';
     loadStyle(`${base}/styles/rounded-corners.css`);
   }
   el.classList.add('con-block');

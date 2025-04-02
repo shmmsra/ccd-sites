@@ -555,11 +555,6 @@ export async function loadBlock(block) {
         block.dataset.blockStatus = 'loaded';
       } catch (err) {
         console.log(`Failed loading ${name}`, err);
-        const config = getConfig();
-        if (config.env.name !== 'prod') {
-          const { showError } = await import('../blocks/fallback/fallback.js');
-          showError(block, name);
-        }
       }
       resolve();
     })();
@@ -1242,40 +1237,40 @@ async function checkForPageMods() {
 }
 
 async function loadPostLCP(config) {
-  const { default: loadFavIcon } = await import('./favicon.js');
-  loadFavIcon(createTag, getConfig(), getMetadata);
+  // const { default: loadFavIcon } = await import('./favicon.js');
+  // loadFavIcon(createTag, getConfig(), getMetadata);
   await decoratePlaceholders(document.body.querySelector('header'), config);
-  const sk = document.querySelector('aem-sidekick, helix-sidekick');
-  if (sk) import('./sidekick-decorate.js').then((mod) => { mod.default(sk); });
-  if (config.mep?.targetEnabled === 'postlcp') {
-    /* c8 ignore next 2 */
-    const { init } = await import('../features/personalization/personalization.js');
-    await init({ postLCP: true });
-    if (enablePersonalizationV2() && !isMartechLoaded) loadMartech();
-  } else if (!isMartechLoaded) loadMartech();
+  // const sk = document.querySelector('aem-sidekick, helix-sidekick');
+  // if (sk) import('./sidekick-decorate.js').then((mod) => { mod.default(sk); });
+  // if (config.mep?.targetEnabled === 'postlcp') {
+  //   /* c8 ignore next 2 */
+  //   const { init } = await import('../features/personalization/personalization.js');
+  //   await init({ postLCP: true });
+  //   if (enablePersonalizationV2() && !isMartechLoaded) loadMartech();
+  // } else if (!isMartechLoaded) loadMartech();
 
-  const georouting = getMetadata('georouting') || config.geoRouting;
-  if (georouting === 'on') {
-    const jsonPromise = fetch(`${config.contentRoot ?? ''}/georoutingv2.json`);
-    import('../features/georoutingv2/georoutingv2.js')
-      .then(({ default: loadGeoRouting }) => {
-        loadGeoRouting(config, createTag, getMetadata, loadBlock, loadStyle, jsonPromise);
-      });
-  }
-  const header = document.querySelector('header');
-  if (header) {
-    header.classList.add('gnav-hide');
-    loadBlock(header);
-    header.classList.remove('gnav-hide');
-  }
-  loadTemplate();
-  const { default: loadFonts } = await import('./fonts.js');
-  loadFonts(config.locale, loadStyle);
+  // const georouting = getMetadata('georouting') || config.geoRouting;
+  // if (georouting === 'on') {
+  //   const jsonPromise = fetch(`${config.contentRoot ?? ''}/georoutingv2.json`);
+  //   import('../features/georoutingv2/georoutingv2.js')
+  //     .then(({ default: loadGeoRouting }) => {
+  //       loadGeoRouting(config, createTag, getMetadata, loadBlock, loadStyle, jsonPromise);
+  //     });
+  // }
+  // const header = document.querySelector('header');
+  // if (header) {
+  //   header.classList.add('gnav-hide');
+  //   loadBlock(header);
+  //   header.classList.remove('gnav-hide');
+  // }
+  // loadTemplate();
+  // const { default: loadFonts } = await import('./fonts.js');
+  // loadFonts(config.locale, loadStyle);
 
-  if (config?.mep) {
-    import('../features/personalization/personalization.js')
-      .then(({ addMepAnalytics }) => addMepAnalytics(config, header));
-  }
+  // if (config?.mep) {
+  //   import('../features/personalization/personalization.js')
+  //     .then(({ addMepAnalytics }) => addMepAnalytics(config, header));
+  // }
 }
 
 export function scrollToHashedElement(hash) {
@@ -1382,31 +1377,13 @@ function decorateDocumentExtras() {
 }
 
 async function documentPostSectionLoading(config) {
-  decorateFooterPromo();
-  if (getMetadata('seotech-structured-data') === 'on' || getMetadata('seotech-video-url')) {
-    import('../features/seotech/seotech.js').then((module) => module.default(
-      { locationUrl: window.location.href, getMetadata, createTag, getConfig },
-    ));
-  }
-  const richResults = getMetadata('richresults');
-  if (richResults) {
-    const { default: addRichResults } = await import('../features/richresults.js');
-    addRichResults(richResults, { createTag, getMetadata });
-  }
-  loadFooter();
+  // loadFooter();
   if (config.experiment?.selectedVariant?.scripts?.length) {
     config.experiment.selectedVariant.scripts.forEach((script) => loadScript(script));
   }
-  initSidekick();
 
   const { default: delayed } = await import('../scripts/delayed.js');
   delayed([getConfig, getMetadata, loadScript, loadStyle, loadIms]);
-
-  import('../martech/attributes.js').then((analytics) => {
-    document.querySelectorAll('main > div').forEach((section, idx) => analytics.decorateSectionAnalytics(section, idx, config));
-  });
-
-  document.body.appendChild(createTag('div', { id: 'page-load-ok-milo', style: 'display: none;' }));
 }
 
 export function partition(arr, fn) {
