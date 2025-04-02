@@ -1,5 +1,6 @@
 import { decorateBlockBg, decorateBlockText, getBlockSize, decorateTextOverrides } from '../../utils/decorate.js';
-import { createTag, loadStyle, getConfig, loadBlock } from '../../utils/utils.js';
+import { createTag, loadStyle, getConfig } from '../../utils/utils.js';
+import { loadBlock } from '../../scripts/aem.js';
 
 // size: [heading, body, ...detail]
 const blockTypeSizes = {

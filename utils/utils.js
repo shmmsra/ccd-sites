@@ -452,32 +452,6 @@ function getBlockData(block) {
   return { blockPath, name, hasStyles };
 }
 
-export async function loadBlock(block) {
-  if (block.classList.contains('hide-block')) {
-    block.remove();
-    return null;
-  }
-  const { name, blockPath, hasStyles } = getBlockData(block);
-  const styleLoaded = hasStyles && new Promise((resolve) => {
-    loadStyle(`${blockPath}.css`, resolve);
-  });
-  const scriptLoaded = new Promise((resolve) => {
-    (async () => {
-      try {
-        const { default: init } = await import(`${blockPath}.js`);
-        await init(block);
-        block.dataset.blockStatus = 'loaded';
-      } catch (err) {
-        console.log(`Failed loading ${name}`, err);
-      }
-      resolve();
-    })();
-  });
-
-  await Promise.all([styleLoaded, scriptLoaded]);
-  return block;
-}
-
 export function decorateSVG(a) {
   const { textContent, href } = a;
   if (!(textContent.includes('.svg') || href.includes('.svg'))) return a;
@@ -808,18 +782,6 @@ export async function decoratePlaceholders(area, config) {
   await decoratePlaceholderArea({ placeholderPath, placeholderRequest, nodes });
 }
 
-async function loadFooter() {
-  const footer = document.querySelector('footer');
-  if (!footer) return;
-  const footerMeta = getMetadata('footer');
-  if (footerMeta === 'off') {
-    footer.remove();
-    return;
-  }
-  footer.className = footerMeta || 'global-footer';
-  await loadBlock(footer);
-}
-
 export function filterDuplicatedLinkBlocks(blocks) {
   if (!blocks?.length) return [];
   const uniqueModalKeys = new Set();
@@ -950,13 +912,6 @@ async function processSection(section, config, isDoc) {
     decorateIcons(section.el, config),
   ]);
   const loadBlocks = [...stylePromises];
-  if (section.preloadLinks.length) {
-    const [modals, blocks] = partition(section.preloadLinks, (block) => block.classList.contains('modal'));
-    await Promise.all(blocks.map((block) => loadBlock(block)));
-    modals.forEach((block) => loadBlock(block));
-  }
-
-  section.blocks.forEach((block) => loadBlocks.push(loadBlock(block)));
 
   // Only move on to the next section when all blocks are loaded.
   await Promise.all(loadBlocks);
