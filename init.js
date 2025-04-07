@@ -1,3 +1,6 @@
+import loadPage from "./scripts/scripts.js";
+import "./styles/styles.css";
+
 // Function to fetch and inject AEM fragment content
 async function loadAEMFragment(url) {
   try {
@@ -64,26 +67,13 @@ async function loadAEMFragment(url) {
     document.body.innerHTML = "";
     document.body.appendChild(main);
 
-    // Inject styles.css
-    const styleLink = document.createElement("link");
-    styleLink.rel = "stylesheet";
-    styleLink.href = "/styles/styles.css";
-    document.head.appendChild(styleLink);
-
-    // Inject scripts.js
-    const script = document.createElement("script");
-    script.type = "module";
-    script.src = "/scripts/scripts.js";
-    document.head.appendChild(script);
-
     console.log("Fragment loaded and injected successfully");
+
+    loadPage();
   } catch (error) {
     console.error("Error loading fragment:", error);
   }
 }
-
-// Export the function for use in other modules
-export { loadAEMFragment };
 
 // Note: Due to CORS restrictions, you'll need one of these solutions:
 // 1. Set up a proxy server to forward the requests
@@ -93,5 +83,5 @@ export { loadAEMFragment };
 
 // Example usage with a proxy URL (you'll need to set this up):
 loadAEMFragment(
-  "https://main--ccd-sites--shmmsra.aem.page/shmishra/explore-ai-features.plain.html"
+  "https://main--ccd-sites--shmmsra.aem.page/shmishra/creators-first-blade.plain.html"
 );

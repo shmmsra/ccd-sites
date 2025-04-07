@@ -59,7 +59,7 @@ function decorateBlockIconArea(content, el) {
 
 function decorateLinkFarms(el) {
   const { miloLibs, codeRoot } = getConfig();
-  loadStyle(`${miloLibs || codeRoot}/blocks/text/link-farms.css`);
+  import(/* webpackMode: "eager" */ `./link-farms.css`);
   const [title, foregroundDiv] = [...el.querySelectorAll('.foreground')];
   const hCount = foregroundDiv.querySelectorAll('h1, h2, h3, h4, h5, h6').length;
   title.querySelector('h1, h2, h3, h4, h5, h6')?.classList.add('heading-l');
@@ -84,7 +84,7 @@ function decorateLinkFarms(el) {
 function addStyle(filename) {
   const { miloLibs, codeRoot } = getConfig();
   const base = miloLibs || codeRoot;
-  loadStyle(`${base}/styles/${filename}.css`);
+  import(/* webpackMode: "eager" */ `../../styles/${filename}.css`);
 }
 
 export default async function init(el) {

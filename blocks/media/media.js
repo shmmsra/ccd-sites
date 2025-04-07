@@ -8,7 +8,7 @@ import {
   applyHoverPlay,
   loadCDT,
 } from '../../utils/decorate.js';
-import { createTag, loadStyle, getConfig } from '../../utils/utils.js';
+import { createTag, getConfig } from '../../utils/utils.js';
 
 const blockTypeSizes = {
   small: ['xs', 's', 'm'],
@@ -50,7 +50,7 @@ export default async function init(el) {
   if (el.className.includes('rounded-corners')) {
     const config = getConfig();
     const base = config?.miloLibs || config?.codeRoot || '';
-    loadStyle(`${base}/styles/rounded-corners.css`);
+    import(/* webpackMode: "eager" */ `../../styles/rounded-corners.css`);
   }
   el.classList.add('con-block');
   let rows = el.querySelectorAll(':scope > div');

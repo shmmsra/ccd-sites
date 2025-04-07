@@ -7,7 +7,6 @@ import {
   decorateTemplateAndTheme,
   waitForFirstImage,
   loadSection,
-  loadCSS,
 } from './aem.js';
 
 function setConfig(config = {}) {
@@ -55,7 +54,7 @@ function buildAutoBlocks(main) {
  * @param {Element} main The main element
  */
 // eslint-disable-next-line import/prefer-default-export
-export function decorateMain(main) {
+function decorateMain(main) {
   // hopefully forward compatible button decoration
   decorateButtons(main);
   decorateIcons(main);
@@ -84,9 +83,7 @@ const config = {
   codeBasePath: '',
 };
 
-async function loadPage() {
+export default async function loadPage() {
   setConfig(config);
   await loadEager(document);
 }
-
-loadPage();

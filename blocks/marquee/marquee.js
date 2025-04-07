@@ -3,7 +3,7 @@
  */
 
 import { decorateButtons, getBlockSize, decorateBlockBg, loadCDT } from '../../utils/decorate.js';
-import { createTag, getConfig, loadStyle } from '../../utils/utils.js';
+import { createTag, getConfig } from '../../utils/utils.js';
 
 // [headingSize, bodySize, detailSize]
 const blockTypeSizes = {
@@ -70,9 +70,9 @@ export async function loadMnemonicList(foreground) {
   try {
     const { base } = getConfig();
     const stylePromise = new Promise((resolve) => {
-      loadStyle(`${base}/blocks/mnemonic-list/mnemonic-list.css`, resolve);
+      import(/* webpackMode: "eager" */ `../../blocks/mnemonic-list/mnemonic-list.css`, resolve);
     });
-    const loadModule = import('../mnemonic-list/mnemonic-list.js')
+    const loadModule = import(/* webpackMode: "eager" */ '../mnemonic-list/mnemonic-list.js')
       .then(({ decorateMnemonicList }) => decorateMnemonicList(foreground));
     await Promise.all([stylePromise, loadModule]);
   } catch (err) {

@@ -20,7 +20,7 @@ export async function handleStyle(text, section) {
   const styles = text.split(', ').map((style) => style.replaceAll(' ', '-'));
   const sticky = styles.find((style) => style === 'sticky-top' || style === 'sticky-bottom');
   if (sticky) {
-    const { default: handleStickySection } = await import('./sticky-section.js');
+    const { default: handleStickySection } = await import(/* webpackMode: "eager" */ './sticky-section.js');
     await handleStickySection(sticky, section);
   }
   if (styles.includes('masonry')) styles.push('masonry-up');

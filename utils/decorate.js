@@ -408,9 +408,9 @@ export function decorateMultiViewport(el) {
 export async function loadCDT(el, classList) {
   try {
     await Promise.all([
-      loadStyle(`${miloLibs || codeRoot}/features/cdt/cdt.css`),
-      import('../features/cdt/cdt.js')
-        .then(({ default: initCDT }) => initCDT(el, classList)),
+      // loadStyle(`${miloLibs || codeRoot}/features/cdt/cdt.css`),
+      // import('../features/cdt/cdt.js')
+      //   .then(({ default: initCDT }) => initCDT(el, classList)),
     ]);
   } catch (error) {
     window.lana?.log(`WARN: Failed to load countdown timer: ${error}`, { tags: 'errorType=warn,module=countdown-timer' });
@@ -448,14 +448,14 @@ function updateAriaLabel(videoEl, videoAttrs) {
 
 export function decoratePausePlayWrapper(videoEl, videoAttrs) {
   if (!videoLabels.hasFetched) {
-    import('../features/placeholders.js').then(({ replaceKeyArray }) => {
-      replaceKeyArray(['pause-motion', 'play-motion', 'pause-icon', 'play-icon'], getFedsPlaceholderConfig())
-        .then(([pauseMotion, playMotion, pauseIcon, playIcon]) => {
-          videoLabels = { playMotion, pauseMotion, pauseIcon, playIcon };
-          videoLabels.hasFetched = true;
-          updateAriaLabel(videoEl, videoAttrs);
-        });
-    });
+    // import('../features/placeholders.js').then(({ replaceKeyArray }) => {
+    //   replaceKeyArray(['pause-motion', 'play-motion', 'pause-icon', 'play-icon'], getFedsPlaceholderConfig())
+    //     .then(([pauseMotion, playMotion, pauseIcon, playIcon]) => {
+    //       videoLabels = { playMotion, pauseMotion, pauseIcon, playIcon };
+    //       videoLabels.hasFetched = true;
+    //       updateAriaLabel(videoEl, videoAttrs);
+    //     });
+    // });
   } else {
     updateAriaLabel(videoEl, videoAttrs);
   }
