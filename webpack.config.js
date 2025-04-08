@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { StatsWriterPlugin } = require("webpack-stats-plugin");
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
@@ -57,6 +58,12 @@ module.exports = (env, argv) => {
             }),
           ]
         : []),
+      new StatsWriterPlugin({
+        stats: {
+          all: true, // Or specific fields like 'assets', 'chunks', 'modules'
+        },
+        filename: "stats.json",
+      }),
     ],
     devServer: {
       static: {

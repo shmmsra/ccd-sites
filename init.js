@@ -1,5 +1,17 @@
+import(/* webpackMode: "eager" */ './blocks/aside/aside.js');
+import(/* webpackMode: "eager" */ './blocks/aside/aside.css');
+import(/* webpackMode: "eager" */ './blocks/cards/cards.js');
+import(/* webpackMode: "eager" */ './blocks/cards/cards.css');
+import(/* webpackMode: "eager" */ './blocks/columns/columns.js');
+import(/* webpackMode: "eager" */ './blocks/columns/columns.css');
+import(/* webpackMode: "eager" */ './blocks/header/header.js');
+import(/* webpackMode: "eager" */ './blocks/header/header.css');
+import(/* webpackMode: "eager" */ './blocks/hero/hero.js');
+import(/* webpackMode: "eager" */ './blocks/hero/hero.css');
 import(/* webpackMode: "eager" */ './blocks/fragment/fragment.js');
 import(/* webpackMode: "eager" */ './blocks/fragment/fragment.css');
+import(/* webpackMode: "eager" */ './blocks/footer/footer.js');
+import(/* webpackMode: "eager" */ './blocks/footer/footer.css');
 import(/* webpackMode: "eager" */ './blocks/marquee/marquee.js');
 import(/* webpackMode: "eager" */ './blocks/marquee/marquee.css');
 import(/* webpackMode: "eager" */ './blocks/media/media.js');
