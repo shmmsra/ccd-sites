@@ -1,3 +1,20 @@
+import(/* webpackMode: "eager" */ './blocks/fragment/fragment.js');
+import(/* webpackMode: "eager" */ './blocks/fragment/fragment.css');
+import(/* webpackMode: "eager" */ './blocks/marquee/marquee.js');
+import(/* webpackMode: "eager" */ './blocks/marquee/marquee.css');
+import(/* webpackMode: "eager" */ './blocks/media/media.js');
+import(/* webpackMode: "eager" */ './blocks/media/media.css');
+import(/* webpackMode: "eager" */ './blocks/mnemonic-list/mnemonic-list.js');
+import(/* webpackMode: "eager" */ './blocks/mnemonic-list/mnemonic-list.css');
+import(/* webpackMode: "eager" */ './blocks/section-metadata/section-metadata.css');
+import(/* webpackMode: "eager" */ './blocks/section-metadata/section-metadata.js');
+import(/* webpackMode: "eager" */ './blocks/section-metadata/sticky-section.js');
+import(/* webpackMode: "eager" */ './blocks/text/link-farms.css');
+import(/* webpackMode: "eager" */ './blocks/text/text.css');
+import(/* webpackMode: "eager" */ './blocks/text/text.js');
+import(/* webpackMode: "eager" */ './styles/rounded-corners.css');
+import(/* webpackMode: "eager" */ './utils/utils.js');
+
 import loadPage from "./scripts/scripts.js";
 import "./styles/styles.css";
 
@@ -82,6 +99,9 @@ async function loadAEMFragment(url) {
 // 4. Use a browser extension to disable CORS (for development only)
 
 // Example usage with a proxy URL (you'll need to set this up):
+// loadAEMFragment(
+//   "https://main--ccd-sites--shmmsra.aem.page/shmishra/creators-first-blade.plain.html"
+// );
 loadAEMFragment(
-  "https://main--ccd-sites--shmmsra.aem.page/shmishra/creators-first-blade.plain.html"
+  "https://main--ccd-sites--shmmsra.aem.page/shmishra/explore-ai-features.plain.html"
 );

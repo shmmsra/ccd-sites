@@ -889,13 +889,13 @@ const preloadBlockResources = (blocks = []) => blocks.map((block) => {
     loadLink(`${getConfig().base}/utils/decorate.js`, { rel: 'preload', as: 'script', crossorigin: 'anonymous' });
   }
   loadLink(`${blockPath}.js`, { rel: 'preload', as: 'script', crossorigin: 'anonymous' });
-  return hasStyles && new Promise((resolve) => { import(/* webpackMode: "eager" */ `${blockPath}.css`, resolve); });
+  return hasStyles && new Promise((resolve) => { import(`${blockPath}.css`, resolve); });
 }).filter(Boolean);
 
 async function resolveInlineFrags(section) {
   const inlineFrags = [...section.el.querySelectorAll('a[href*="#_inline"]')];
   if (!inlineFrags.length) return;
-  const { default: loadInlineFrags } = await import(/* webpackMode: "eager" */ '../blocks/fragment/fragment.js');
+  const { default: loadInlineFrags } = await import('../blocks/fragment/fragment.js');
   const fragPromises = inlineFrags.map((link) => loadInlineFrags(link));
   await Promise.all(fragPromises);
   const newlyDecoratedSection = decorateSection(section.el, section.idx);

@@ -443,12 +443,12 @@ async function loadBlock(block) {
     block.dataset.blockStatus = 'loading';
     const { blockName } = block.dataset;
     try {
-      const cssLoaded = import(/* webpackMode: "eager" */ `../blocks/${blockName}/${blockName}.css`);
+      const cssLoaded = import(`../blocks/${blockName}/${blockName}.css`);
       const decorationComplete = new Promise((resolve) => {
         (async () => {
           try {
             const mod = await import(
-              /* webpackMode: "eager" */ `../blocks/${blockName}/${blockName}.js`
+              `../blocks/${blockName}/${blockName}.js`
             );
             if (mod.default) {
               await mod.default(block);

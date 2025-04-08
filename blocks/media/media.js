@@ -50,7 +50,7 @@ export default async function init(el) {
   if (el.className.includes('rounded-corners')) {
     const config = getConfig();
     const base = config?.miloLibs || config?.codeRoot || '';
-    import(/* webpackMode: "eager" */ `../../styles/rounded-corners.css`);
+    import(`../../styles/rounded-corners.css`);
   }
   el.classList.add('con-block');
   let rows = el.querySelectorAll(':scope > div');

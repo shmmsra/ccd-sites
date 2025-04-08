@@ -70,9 +70,9 @@ export async function loadMnemonicList(foreground) {
   try {
     const { base } = getConfig();
     const stylePromise = new Promise((resolve) => {
-      import(/* webpackMode: "eager" */ `../../blocks/mnemonic-list/mnemonic-list.css`, resolve);
+      import(`../../blocks/mnemonic-list/mnemonic-list.css`, resolve);
     });
-    const loadModule = import(/* webpackMode: "eager" */ '../mnemonic-list/mnemonic-list.js')
+    const loadModule = import('../mnemonic-list/mnemonic-list.js')
       .then(({ decorateMnemonicList }) => decorateMnemonicList(foreground));
     await Promise.all([stylePromise, loadModule]);
   } catch (err) {
