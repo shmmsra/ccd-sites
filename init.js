@@ -30,90 +30,89 @@ import(/* webpackMode: "eager" */ './utils/utils.js');
 import loadPage from "./scripts/scripts.js";
 import "./styles/styles.css";
 
-// Function to fetch and inject AEM fragment content
-async function loadAEMFragment(url, parentEl) {
-  try {
-    // Fetch the plain HTML fragment with no-cors mode
-    const response = await fetch(url, {
-      headers: {
-        Accept:
-          "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-      },
-    });
+import { LitElement, html, css } from 'lit';
 
-    const html = await response.text();
+class AEMSites extends LitElement {
+  static properties = {
+    path: { type: String },
+  };
 
-    // Preprocess HTML to convert relative paths to absolute paths
-    const baseUrl = new URL(url);
-    const processedHtml = html.replace(
-      /(href|src|srcset)="(\.\/[^"]*|\.\.\/[^"]*|[^"\/][^"]*)"/g,
-      (match, attr, path) => {
-        // Skip if the path is already absolute or is a data URI
-        if (
-          path.startsWith("http") ||
-          path.startsWith("//") ||
-          path.startsWith("data:")
-        ) {
-          return match;
+  constructor() {
+    super();
+    this.path = '';
+  }
+
+  async firstUpdated() {
+    await this.loadAEMFragment(this.path);
+  }
+
+  async loadAEMFragment(url) {
+    try {
+      const response = await fetch(url, {
+        headers: {
+          Accept:
+            'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        },
+      });
+
+      const html = await response.text();
+      const baseUrl = new URL(url);
+      const processedHtml = html.replace(
+        /(href|src|srcset)="(\.\/[^"\s]*|\.\.\/[^"\s]*|[^"\/][^"\s]*)"/g,
+        (match, attr, path) => {
+          if (path.startsWith('http') || path.startsWith('//') || path.startsWith('data:')) {
+            return match;
+          }
+          if (attr === 'srcset') {
+            return `srcset="${path
+              .split(',')
+              .map((url) => {
+                const [urlPart, size] = url.trim().split(' ');
+                if (urlPart.startsWith('http') || urlPart.startsWith('//') || urlPart.startsWith('data:')) {
+                  return url;
+                }
+                return `${new URL(urlPart, baseUrl).href}${size ? ` ${size}` : ''}`;
+              })
+              .join(', ')}"`;
+          }
+          return `${attr}="${new URL(path, baseUrl).href}"`;
         }
+      );
 
-        // Handle srcset attribute specially as it can contain multiple URLs
-        if (attr === "srcset") {
-          return `srcset="${path
-            .split(",")
-            .map((url) => {
-              const [urlPart, size] = url.trim().split(" ");
-              if (
-                urlPart.startsWith("http") ||
-                urlPart.startsWith("//") ||
-                urlPart.startsWith("data:")
-              ) {
-                return url;
-              }
-              return `${new URL(urlPart, baseUrl).href}${
-                size ? ` ${size}` : ""
-              }`;
-            })
-            .join(", ")}"`;
-        }
+      const parser = new DOMParser();
+      const fragmentDoc = parser.parseFromString(processedHtml, 'text/html');
+      const fragmentBody = fragmentDoc.body;
 
-        // Convert relative path to absolute URL
-        return `${attr}="${new URL(path, baseUrl).href}"`;
-      }
-    );
+      const main = document.createElement('main');
+      main.innerHTML = fragmentBody.innerHTML;
 
-    const parser = new DOMParser();
-    const fragmentDoc = parser.parseFromString(processedHtml, "text/html");
+      this.appendChild(main);
 
-    // Get the body content from the fragment
-    const fragmentBody = fragmentDoc.body;
+      console.log('Fragment loaded and injected successfully');
 
-    // Create a main element and set its content
-    const main = document.createElement("main");
-    main.innerHTML = fragmentBody.innerHTML;
+      loadPage();
+    } catch (error) {
+      console.error('Error loading fragment:', error);
+    }
+  }
 
-    // Clear the body and append the main element
-    parentEl.appendChild(main);
-
-    console.log("Fragment loaded and injected successfully");
-
-    loadPage();
-  } catch (error) {
-    console.error("Error loading fragment:", error);
+  render() {
+    return html`<slot></slot>`;
   }
 }
 
+customElements.define('aem-sites', AEMSites);
 
 function loadAEMFragments() {
-  document.body.innerHTML = "";
-  // loadAEMFragment(
-  //   "https://main--ccd-sites--shmmsra.aem.page/shmishra/creators-first-blade.plain.html",
-  //   document.body
-  // );
-  loadAEMFragment(
-    "https://main--ccd-sites--shmmsra.aem.page/shmishra/explore-ai-features.plain.html",
-    document.body
-  );
+  document.body.innerHTML = '';
+
+  const aemSites1 = document.createElement('aem-sites');
+  aemSites1.path = 'https://main--ccd-sites--shmmsra.aem.page/shmishra/explore-ai-features.plain.html';
+  document.body.appendChild(aemSites1);
+
+  const aemSites2 = document.createElement('aem-sites');
+  aemSites2.path = 'https://main--ccd-sites--shmmsra.aem.page/shmishra/creators-first-blade.plain.html';
+  document.body.appendChild(aemSites2);
 }
 
 loadAEMFragments();
