@@ -36,3 +36,18 @@ npm run lint
 1. Install the [AEM CLI](https://github.com/adobe/helix-cli): `npm install -g @adobe/aem-cli`
 1. Start AEM Proxy: `aem up` (opens your browser at `http://localhost:3000`)
 1. Open the `{repo}` directory in your favorite IDE and start coding :)
+
+# Update-Preview API samples (if not using AEM Sidekick)
+NOTE: Access token can be extracted using Charles or DevTools!
+```
+curl \
+    -H "x-auth-token: <<AEM_SIDEKICK_TOKEN>>" \
+    --data-binary "" \
+    --compressed "https://admin.hlx.page/preview/shmmsra/ccd-sites/main/shmishra/shared-apis.json"
+```
+```
+curl \
+    -H "x-auth-token: <<AEM_SIDEKICK_TOKEN>>" \
+    --data-binary "" \
+    --compressed "https://admin.hlx.page/preview/shmmsra/ccd-sites/main/shmishra/explore-ai-features"
+```
