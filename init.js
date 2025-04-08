@@ -19,7 +19,7 @@ import loadPage from "./scripts/scripts.js";
 import "./styles/styles.css";
 
 // Function to fetch and inject AEM fragment content
-async function loadAEMFragment(url) {
+async function loadAEMFragment(url, parentEl) {
   try {
     // Fetch the plain HTML fragment with no-cors mode
     const response = await fetch(url, {
@@ -81,8 +81,7 @@ async function loadAEMFragment(url) {
     main.innerHTML = fragmentBody.innerHTML;
 
     // Clear the body and append the main element
-    document.body.innerHTML = "";
-    document.body.appendChild(main);
+    parentEl.appendChild(main);
 
     console.log("Fragment loaded and injected successfully");
 
@@ -92,16 +91,17 @@ async function loadAEMFragment(url) {
   }
 }
 
-// Note: Due to CORS restrictions, you'll need one of these solutions:
-// 1. Set up a proxy server to forward the requests
-// 2. Configure CORS headers on the AEM server
-// 3. Use a server-side solution to fetch the content
-// 4. Use a browser extension to disable CORS (for development only)
 
-// Example usage with a proxy URL (you'll need to set this up):
-// loadAEMFragment(
-//   "https://main--ccd-sites--shmmsra.aem.page/shmishra/creators-first-blade.plain.html"
-// );
-loadAEMFragment(
-  "https://main--ccd-sites--shmmsra.aem.page/shmishra/explore-ai-features.plain.html"
-);
+function loadAEMFragments() {
+  document.body.innerHTML = "";
+  loadAEMFragment(
+    "https://main--ccd-sites--shmmsra.aem.page/shmishra/creators-first-blade.plain.html",
+    document.body
+  );
+  loadAEMFragment(
+    "https://main--ccd-sites--shmmsra.aem.page/shmishra/explore-ai-features.plain.html",
+    document.body
+  );
+}
+
+loadAEMFragments();

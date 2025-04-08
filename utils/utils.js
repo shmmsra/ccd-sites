@@ -889,7 +889,7 @@ const preloadBlockResources = (blocks = []) => blocks.map((block) => {
     loadLink(`${getConfig().base}/utils/decorate.js`, { rel: 'preload', as: 'script', crossorigin: 'anonymous' });
   }
   loadLink(`${blockPath}.js`, { rel: 'preload', as: 'script', crossorigin: 'anonymous' });
-  return hasStyles && new Promise((resolve) => { import(`${blockPath}.css`, resolve); });
+  return hasStyles && new Promise((resolve) => { loadStyle(`${blockPath}.css`, resolve); });
 }).filter(Boolean);
 
 async function resolveInlineFrags(section) {
