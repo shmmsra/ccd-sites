@@ -2,10 +2,14 @@
 Your project's description...
 
 ## Environments
-- Preview: https://main--{repo}--{owner}.aem.page/
-- Live: https://main--{repo}--{owner}.aem.live/
+- Preview: https://main--ccd-sites--shmmsra.aem.page/ e.g., https://main--ccd-sites--shmmsra.aem.page/shmishra/explore-ai-features
+- Live: https://main--ccd-sites--shmmsra.aem.live/
 
 ## Documentation
+
+Sample URL formats:
+- Preview: https://main--{repo}--{owner}.aem.page/
+- Live: https://main--{repo}--{owner}.aem.live/
 
 Before using the aem-boilerplate, we recommand you to go through the documentation on https://www.aem.live/docs/ and more specifically:
 1. [Developer Tutorial](https://www.aem.live/developer/tutorial)
