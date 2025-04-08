@@ -7,7 +7,7 @@ import {
   decorateTemplateAndTheme,
   waitForFirstImage,
   loadSection,
-  loadCSS,
+  loadSections,
 } from './aem.js';
 
 function setConfig(config = {}) {
@@ -79,14 +79,24 @@ async function loadEager(doc) {
   }
 }
 
+/**
+ * Loads everything that doesn't need to be delayed.
+ * @param {Element} doc The container element
+ */
+async function loadLazy(doc) {
+  const main = doc.querySelector('main');
+  await loadSections(main);
+}
+
 const config = {
   codeRoot: '/',
   codeBasePath: '',
 };
 
-async function loadPage() {
+export default async function loadPage() {
   setConfig(config);
   await loadEager(document);
+  await loadLazy(document);
 }
 
 loadPage();
