@@ -151,7 +151,7 @@ div[class*="-up"] .media .foreground > .media-row {
   width: 20px;
   height: 24px;
   flex-shrink: 0;
-  background: url("/libs/img/ui/checkmark-green.svg") no-repeat 50% calc(50% + 2px) transparent;
+  /* background: url("/libs/img/ui/checkmark-green.svg") no-repeat 50% calc(50% + 2px) transparent; */
 }
 
 .media .subcopy {
@@ -202,11 +202,11 @@ div[class*="-up"] .media .foreground > .media-row {
 }
 
 .media.qr-code .google-play {
-  background: url('/libs/img/ui/google-play.svg') no-repeat transparent;
+  /* background: url('/libs/img/ui/google-play.svg') no-repeat transparent; */
 }
 
 .media.qr-code .app-store {
-  background: url('/libs/img/ui/app-store.svg') no-repeat transparent;
+  /* background: url('/libs/img/ui/app-store.svg') no-repeat transparent; */
 }
 
 /* avatar */
