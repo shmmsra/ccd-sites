@@ -90,7 +90,6 @@ async function loadLazy(doc) {
 
 const config = {
   codeRoot: '/',
-  codeBasePath: '',
 };
 
 export default async function loadPage() {
@@ -99,6 +98,6 @@ export default async function loadPage() {
   await loadLazy(document);
 }
 
-if (!window.app || window.app.BUILD_MODE !== "builtin") {
+if (window.app && window.app.BUILD_MODE === "dynamic") {
   loadPage();
 }

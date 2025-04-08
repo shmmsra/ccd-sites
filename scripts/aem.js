@@ -13,14 +13,6 @@
 import { loadArea } from '../utils/utils.js';
 
 /**
- * Auto initialization.
- */
-function init() {
-  window.hlx = window.hlx || {};
-  window.hlx.codeBasePath = '';
-}
-
-/**
  * Sanitizes a string for use as class name.
  * @param {string} name The unsanitized string
  * @returns {string} The class name
@@ -93,6 +85,10 @@ function readBlockConfig(block) {
  * @param {string} href URL to the CSS file
  */
 async function loadCSS(href) {
+  if (window.app && window.app.BUILD_MODE === "builtin") {
+    return Promise.resolve();
+  }
+
   return new Promise((resolve, reject) => {
     if (!document.querySelector(`head > link[href="${href}"]`)) {
       const link = document.createElement('link');
@@ -569,8 +565,6 @@ async function loadSections(element) {
     await loadSection(sections[i]);
   }
 }
-
-init();
 
 export {
   buildBlock,
