@@ -75,7 +75,7 @@ async function loadEager(doc) {
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');
-    await loadSection(main.querySelector('.section'), waitForFirstImage);
+    // await loadSection(main.querySelector('.section'), waitForFirstImage);
   }
 }
 
@@ -99,4 +99,6 @@ export default async function loadPage() {
   await loadLazy(document);
 }
 
-loadPage();
+if (!window.app || window.app.BUILD_MODE !== "builtin") {
+  loadPage();
+}

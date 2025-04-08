@@ -106,10 +106,10 @@ async function loadAEMFragment(url, parentEl) {
 
 function loadAEMFragments() {
   document.body.innerHTML = "";
-  loadAEMFragment(
-    "https://main--ccd-sites--shmmsra.aem.page/shmishra/creators-first-blade.plain.html",
-    document.body
-  );
+  // loadAEMFragment(
+  //   "https://main--ccd-sites--shmmsra.aem.page/shmishra/creators-first-blade.plain.html",
+  //   document.body
+  // );
   loadAEMFragment(
     "https://main--ccd-sites--shmmsra.aem.page/shmishra/explore-ai-features.plain.html",
     document.body
