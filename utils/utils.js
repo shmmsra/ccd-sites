@@ -505,7 +505,6 @@ export function decorateImageLinks(el) {
         const aTag = createTag('a', { href, class: 'image-link' });
         picParent.insertBefore(aTag, pic);
         if (icon) {
-          // import('./image-video-link.js').then((mod) => mod.default(picParent, aTag, icon));
         } else {
           aTag.append(pic);
         }
@@ -622,8 +621,6 @@ export function decorateLinks(el) {
 
     if (a.href.includes(branchQuickLink)) {
       (async () => {
-        // const { default: processQuickLink } = await import('../features/branch-quick-links/branch-quick-links.js');
-        // processQuickLink(a);
       })();
     }
     // Append aria-label
@@ -678,8 +675,6 @@ export async function getGnavSource() {
   const { locale, dynamicNavKey } = getConfig();
   let url = getMetadata('gnav-source') || `${locale.contentRoot}/gnav`;
   if (dynamicNavKey) {
-    // const { default: dynamicNav } = await import('../features/dynamic-navigation/dynamic-navigation.js');
-    // url = dynamicNav(url, dynamicNavKey);
   }
   return url;
 }
@@ -730,11 +725,6 @@ async function decorateHeader() {
 async function decorateIcons(area, config) {
   const icons = area.querySelectorAll('span.icon');
   if (icons.length === 0) return;
-  const { base } = config;
-  // loadStyle(`${base}/features/icons/icons.css`);
-  // loadLink(`${base}/img/icons/icons.svg`, { rel: 'preload', as: 'fetch', crossorigin: 'anonymous' });
-  // const { default: loadIcons } = await import('../features/icons/icons.js');
-  // await loadIcons(icons, config);
 }
 
 export async function customFetch({ resource, withCacheRules }) {
@@ -778,8 +768,6 @@ export async function decoratePlaceholders(area, config) {
   placeholderRequest = placeholderRequest
     || customFetch({ resource: placeholderPath, withCacheRules: true })
       .catch(() => ({}));
-  // const { decoratePlaceholderArea } = await import('../features/placeholders.js');
-  // await decoratePlaceholderArea({ placeholderPath, placeholderRequest, nodes });
 }
 
 export function filterDuplicatedLinkBlocks(blocks) {
@@ -848,9 +836,6 @@ export async function decorateFooterPromo(doc = document) {
   const footerPromoTag = getMetadata('footer-promo-tag', doc);
   const footerPromoType = getMetadata('footer-promo-type', doc);
   if (!footerPromoTag && footerPromoType !== 'taxonomy') return;
-
-  // const { default: initFooterPromo } = await import('../features/footer-promo.js');
-  // await initFooterPromo(footerPromoTag, footerPromoType, doc);
 }
 
 export function scrollToHashedElement(hash) {
@@ -883,13 +868,6 @@ export function partition(arr, fn) {
 
 const preloadBlockResources = (blocks = []) => blocks.map((block) => {
   return;
-  if (block.classList.contains('hide-block')) return null;
-  const { blockPath, hasStyles, name } = getBlockData(block);
-  if (['marquee', 'hero-marquee'].includes(name)) {
-    loadLink(`${getConfig().base}/utils/decorate.js`, { rel: 'preload', as: 'script', crossorigin: 'anonymous' });
-  }
-  loadLink(`${blockPath}.js`, { rel: 'preload', as: 'script', crossorigin: 'anonymous' });
-  return hasStyles && new Promise((resolve) => { loadStyle(`${blockPath}.css`, resolve); });
 }).filter(Boolean);
 
 async function resolveInlineFrags(section) {

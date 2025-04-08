@@ -81,13 +81,6 @@ export default async function init(a) {
     relHref = relHref.replace('#_inline', '');
   }
 
-  const path = new URL(a.href).pathname;
-  // if (mep?.fragments?.[path]) {
-  //   const { handleFragmentCommand } = await import('../../features/personalization/personalization.js');
-  //   relHref = handleFragmentCommand(mep?.fragments[path], a);
-  //   if (!relHref) return;
-  // }
-
   if (isCircularRef(relHref)) {
     window.lana?.log(`ERROR: Fragment Circular Reference loading ${a.href}`);
     return;
@@ -122,17 +115,6 @@ export default async function init(a) {
   fragment.append(...sections);
 
   updateFragMap(fragment, a, relHref);
-  // if (a.dataset.manifestId
-  //   || a.dataset.adobeTargetTestid
-  //   || mep?.commands?.length
-  //   || placeholders) {
-  //   const { updateFragDataProps, handleCommands, replacePlaceholders } = await import('../../features/personalization/personalization.js');
-  //   if (a.dataset.manifestId || a.dataset.adobeTargetTestid) {
-  //     updateFragDataProps(a, inline, sections, fragment);
-  //   }
-  //   if (mep?.commands?.length) handleCommands(mep?.commands, fragment, false, true);
-  //   if (placeholders) fragment.innerHTML = replacePlaceholders(fragment.innerHTML, placeholders);
-  // }
   if (inline) {
     insertInlineFrag(sections, a, relHref, mep);
   } else {
