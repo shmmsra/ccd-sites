@@ -102,17 +102,3 @@ class AEMSites extends LitElement {
 }
 
 customElements.define('aem-sites', AEMSites);
-
-function loadAEMFragments() {
-  document.body.innerHTML = '';
-
-  const aemSites1 = document.createElement('aem-sites');
-  aemSites1.path = 'https://main--ccd-sites--shmmsra.aem.page/shmishra/explore-ai-features.plain.html';
-  document.body.appendChild(aemSites1);
-
-  const aemSites2 = document.createElement('aem-sites');
-  aemSites2.path = 'https://main--ccd-sites--shmmsra.aem.page/shmishra/creators-first-blade.plain.html';
-  document.body.appendChild(aemSites2);
-}
-
-loadAEMFragments();

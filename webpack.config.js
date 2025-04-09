@@ -43,7 +43,8 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: './index.html',
+        template: './index.ejs',
+        filename: 'index.html',
         minify: isProduction
           ? {
               removeComments: true,
