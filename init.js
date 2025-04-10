@@ -96,7 +96,7 @@ class AEMSites extends LitElement {
 
       console.log('Fragment loaded and injected successfully');
 
-      loadPage();
+      loadPage(this);
     } catch (error) {
       console.error('Error loading fragment:', error);
     }
@@ -107,4 +107,6 @@ class AEMSites extends LitElement {
   }
 }
 
-customElements.define('aem-sites', AEMSites);
+if (!customElements.get('aem-sites')) {
+  customElements.define('aem-sites', AEMSites);
+}

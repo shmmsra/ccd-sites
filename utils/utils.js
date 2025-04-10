@@ -343,6 +343,9 @@ export function loadLink(href, { as, callback, crossorigin, rel, fetchpriority }
 }
 
 export function loadStyle(href, callback) {
+  if (window.app && window.app.BUILD_MODE === "builtin") {
+    return null;
+  }
   return loadLink(href, { rel: 'stylesheet', callback });
 }
 

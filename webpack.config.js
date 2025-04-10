@@ -46,6 +46,7 @@ module.exports = (env, argv) => {
       new HtmlWebpackPlugin({
         template: "./index.ejs",
         filename: "index.html",
+        inject: false,
         minify: isProduction
           ? {
               removeComments: true,
