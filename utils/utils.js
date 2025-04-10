@@ -96,6 +96,8 @@ const DO_NOT_INLINE = [
   'z-pattern',
 ];
 
+export const MILO_EVENTS = { DEFERRED: 'milo:deferred' };
+
 const ENVS = {
   stage: {
     name: 'stage',
