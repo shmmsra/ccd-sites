@@ -810,13 +810,15 @@ export async function customFetch({ resource, withCacheRules }) {
     options.cache = params.get('cache') === 'off' ? 'reload' : 'default';
   }
 
-  const response = await fetch(resource, options);
+  const baseUrl = new URL(resource);
+  // HACK: Adding a forced cache bust to avoid cache issues
+  baseUrl.searchParams.set('cb', new Date().getTime());
+  const response = await fetch(baseUrl.toString(), options);
   if (!resource.endsWith('.plain.html')) {
     return response;
   }
 
   const html = await response.text();
-  const baseUrl = new URL(resource);
   const processedHtml = html.replace(
     /(href|src|srcset)="(\.\/[^"\s]*|\.\.\/[^"\s]*|[^"\/][^"\s]*)"/g,
     (match, attr, path) => {
