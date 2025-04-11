@@ -89,6 +89,23 @@ const MILO_BLOCKS = [
   'reading-time',
 ];
 const AUTO_BLOCKS = [
+  { adobetv: 'tv.adobe.com' },
+  { gist: 'https://gist.github.com' },
+  { caas: '/tools/caas' },
+  { faas: '/tools/faas' },
+  { fragment: '/shmishra/', styles: false },
+  { instagram: 'https://www.instagram.com' },
+  { slideshare: 'https://www.slideshare.net', styles: false },
+  { tiktok: 'https://www.tiktok.com', styles: false },
+  { twitter: 'https://twitter.com' },
+  { vimeo: 'https://vimeo.com' },
+  { vimeo: 'https://player.vimeo.com' },
+  { youtube: 'https://www.youtube.com' },
+  { youtube: 'https://youtu.be' },
+  { 'pdf-viewer': '.pdf', styles: false },
+  { video: '.mp4' },
+  { merch: '/tools/ost?' },
+  { 'mas-autoblock': 'mas.adobe.com/studio' },
 ];
 const DO_NOT_INLINE = [
   'accordion',
@@ -184,6 +201,9 @@ export const [setConfig, updateConfig, getConfig] = (() => {
   let config = {};
   return [
     (conf) => {
+      window.hlx = window.hlx || {};
+      window.hlx.config = conf;
+
       const origin = conf.origin || window.location.origin;
       const pathname = conf.pathname || window.location.pathname;
       config = { env: getEnv(conf), ...conf };
@@ -532,10 +552,61 @@ export function decorateAutoBlock(a) {
   }
 
   const href = hostname === url.hostname
-    ? `${url.pathname}${url.search}${url.hash}`
-    : a.href;
+  ? `${url.pathname}${url.search}${url.hash}`
+  : a.href;
 
-  return false;
+  return config.autoBlocks.find((candidate) => {
+    const key = Object.keys(candidate)[0];
+    const match = href.includes(candidate[key]);
+    if (!match) return false;
+
+    if (key === 'pdf-viewer' && !a.textContent.includes('.pdf')) {
+      a.target = '_blank';
+      return false;
+    }
+
+    const hasExtension = a.href.split('/').pop().includes('.');
+    const mp4Match = a.textContent.match('media_.*.mp4');
+    if (key === 'fragment' && (!hasExtension || mp4Match)) {
+      if (a.href === window.location.href) {
+        return false;
+      }
+
+      const isInlineFrag = url.hash.includes('#_inline');
+      if (url.hash === '' || isInlineFrag) {
+        const { parentElement } = a;
+        const { nodeName, innerHTML } = parentElement;
+        const noText = innerHTML === a.outerHTML;
+        if (noText && nodeName === 'P') {
+          const div = createTag('div', null, a);
+          parentElement.parentElement.replaceChild(div, parentElement);
+        }
+      }
+
+      // previewing a fragment page with mp4 video
+      if (mp4Match) {
+        a.className = 'video link-block';
+        return false;
+      }
+
+      // Modals
+      if (url.hash !== '' && !isInlineFrag) {
+        a.dataset.modalPath = url.pathname;
+        a.dataset.modalHash = url.hash;
+        a.href = url.hash;
+        a.className = `modal link-block ${[...a.classList].join(' ')}`;
+        return true;
+      }
+    }
+
+    // slack uploaded mp4s
+    if (key === 'video' && !a.textContent.match('media_.*.mp4')) {
+      return false;
+    }
+
+    a.className = `${key} link-block`;
+    return true;
+  });
 }
 
 const decorateCopyLink = (a, evt) => {
@@ -738,7 +809,46 @@ export async function customFetch({ resource, withCacheRules }) {
     const params = new URLSearchParams(window.location.search);
     options.cache = params.get('cache') === 'off' ? 'reload' : 'default';
   }
-  return fetch(resource, options);
+
+  const response = await fetch(resource, options);
+  if (!resource.endsWith('.plain.html')) {
+    return response;
+  }
+
+  const html = await response.text();
+  const baseUrl = new URL(resource);
+  const processedHtml = html.replace(
+    /(href|src|srcset)="(\.\/[^"\s]*|\.\.\/[^"\s]*|[^"\/][^"\s]*)"/g,
+    (match, attr, path) => {
+      if (path.startsWith('http') || path.startsWith('//') || path.startsWith('data:')) {
+        return match;
+      }
+      if (attr === 'srcset') {
+        return `srcset="${path
+          .split(',')
+          .map((url) => {
+            const [urlPart, size] = url.trim().split(' ');
+            if (urlPart.startsWith('http') || urlPart.startsWith('//') || urlPart.startsWith('data:')) {
+              return url;
+            }
+            return `${new URL(urlPart, baseUrl).href}${size ? ` ${size}` : ''}`;
+          })
+          .join(', ')}"`;
+      }
+      return `${attr}="${new URL(path, baseUrl).href}"`;
+    }
+  );
+  return new Response(processedHtml, {
+    headers: {
+      'Content-Type': 'text/html',
+    },
+  });
+}
+
+export function htmlText(text) {
+  return text.replace(/%7B%7B(.*?)%7D%7D/g, (match, p1) => {
+    return decodeURIComponent(p1);
+  });
 }
 
 const findReplaceableNodes = (area) => {
@@ -886,6 +996,66 @@ async function resolveInlineFrags(section) {
   section.preloadLinks = newlyDecoratedSection.preloadLinks;
 }
 
+/**
+ * Loads a CSS file.
+ * @param {string} href URL to the CSS file
+ */
+async function loadCSS(href) {
+  if (window.app && window.app.BUILD_MODE === "builtin") {
+    return Promise.resolve();
+  }
+
+  return new Promise((resolve, reject) => {
+    if (!document.querySelector(`head > link[href="${href}"]`)) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = href;
+      link.onload = resolve;
+      link.onerror = reject;
+      document.head.append(link);
+    } else {
+      resolve();
+    }
+  });
+}
+
+/**
+ * Loads JS and CSS for a block.
+ * @param {Element} block The block element
+ */
+export async function loadBlock(block) {
+  const status = block.dataset.blockStatus;
+  if (status !== 'loading' && status !== 'loaded') {
+    block.dataset.blockStatus = 'loading';
+    const { blockName } = (!block.dataset || !block.dataset.blockName) ? { blockName: block.classList[0] } : block.dataset;
+    try {
+      const cssLoaded = loadCSS(`${window.hlx.codeBasePath}/blocks/${blockName}/${blockName}.css`);
+      const decorationComplete = new Promise((resolve) => {
+        (async () => {
+          try {
+            const mod = await import(
+              `../blocks/${blockName}/${blockName}.js`
+            );
+            if (mod.default) {
+              await mod.default(block);
+            }
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.log(`failed to load module for ${blockName}`, error);
+          }
+          resolve();
+        })();
+      });
+      await Promise.all([cssLoaded, decorationComplete]);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(`failed to load block ${blockName}`, error);
+    }
+    block.dataset.blockStatus = 'loaded';
+  }
+  return block;
+}
+
 async function processSection(section, config, isDoc) {
   await resolveInlineFrags(section);
   const firstSection = section.el.dataset.idx === '0';
@@ -896,6 +1066,8 @@ async function processSection(section, config, isDoc) {
     decorateIcons(section.el, config),
   ]);
   const loadBlocks = [...stylePromises];
+
+  section.blocks.forEach((block) => loadBlocks.push(loadBlock(block)));
 
   // Only move on to the next section when all blocks are loaded.
   await Promise.all(loadBlocks);
@@ -951,3 +1123,49 @@ export function debounce(callback, time = 300) {
   };
 }
 
+/**
+* Returns a picture element with webp and fallbacks
+* @param {string} src The image URL
+* @param {string} [alt] The image alternative text
+* @param {boolean} [eager] Set loading attribute to eager
+* @param {Array} [breakpoints] Breakpoints and corresponding params (eg. width)
+* @returns {Element} The picture element
+*/
+export function createOptimizedPicture(
+ src,
+ alt = '',
+ eager = false,
+ breakpoints = [{ media: '(min-width: 600px)', width: '2000' }, { width: '750' }],
+) {
+ const url = new URL(src, window.location.href);
+ const picture = document.createElement('picture');
+ const { pathname } = url;
+ const ext = pathname.substring(pathname.lastIndexOf('.') + 1);
+
+ // webp
+ breakpoints.forEach((br) => {
+   const source = document.createElement('source');
+   if (br.media) source.setAttribute('media', br.media);
+   source.setAttribute('type', 'image/webp');
+   source.setAttribute('srcset', `${pathname}?width=${br.width}&format=webply&optimize=medium`);
+   picture.appendChild(source);
+ });
+
+ // fallback
+ breakpoints.forEach((br, i) => {
+   if (i < breakpoints.length - 1) {
+     const source = document.createElement('source');
+     if (br.media) source.setAttribute('media', br.media);
+     source.setAttribute('srcset', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
+     picture.appendChild(source);
+   } else {
+     const img = document.createElement('img');
+     img.setAttribute('loading', eager ? 'eager' : 'lazy');
+     img.setAttribute('alt', alt);
+     picture.appendChild(img);
+     img.setAttribute('src', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
+   }
+ });
+
+ return picture;
+}

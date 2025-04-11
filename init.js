@@ -34,6 +34,7 @@ import(/* webpackMode: "eager" */ './styles/rounded-corners.css');
 import(/* webpackMode: "eager" */ './utils/utils.js');
 
 import loadPage from "./scripts/scripts.js";
+import { customFetch } from "./utils/utils.js";
 import "./styles/styles.css";
 
 import { LitElement, html, css } from 'lit';
@@ -54,36 +55,11 @@ class AEMSites extends LitElement {
 
   async loadAEMFragment(url) {
     try {
-      const response = await fetch(url, {
-        headers: {
-          Accept:
-            'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        },
-      });
-
-      const html = await response.text();
       const baseUrl = new URL(url);
-      const processedHtml = html.replace(
-        /(href|src|srcset)="(\.\/[^"\s]*|\.\.\/[^"\s]*|[^"\/][^"\s]*)"/g,
-        (match, attr, path) => {
-          if (path.startsWith('http') || path.startsWith('//') || path.startsWith('data:')) {
-            return match;
-          }
-          if (attr === 'srcset') {
-            return `srcset="${path
-              .split(',')
-              .map((url) => {
-                const [urlPart, size] = url.trim().split(' ');
-                if (urlPart.startsWith('http') || urlPart.startsWith('//') || urlPart.startsWith('data:')) {
-                  return url;
-                }
-                return `${new URL(urlPart, baseUrl).href}${size ? ` ${size}` : ''}`;
-              })
-              .join(', ')}"`;
-          }
-          return `${attr}="${new URL(path, baseUrl).href}"`;
-        }
-      );
+      window.hlx.contentBaseRoot = baseUrl.origin;
+
+      const response = await customFetch({ resource: url, withCacheRules: true });
+      const processedHtml = await response.text();
 
       const parser = new DOMParser();
       const fragmentDoc = parser.parseFromString(processedHtml, 'text/html');

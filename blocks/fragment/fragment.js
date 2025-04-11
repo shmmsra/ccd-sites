@@ -87,6 +87,10 @@ export default async function init(a) {
   }
 
   let resourcePath = a.href;
+  if (window.hlx.contentBaseRoot) {
+    resourcePath = `${window.hlx.contentBaseRoot}${a.getAttribute("href")}`;
+  }
+
   if (a.href.includes('/federal/')) {
     const { getFederatedUrl } = await import('../../utils/utils.js');
     resourcePath = getFederatedUrl(a.href);

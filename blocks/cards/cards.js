@@ -1,4 +1,4 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
+import { createOptimizedPicture } from '../../utils/utils.js';
 
 export default function decorate(block) {
   /* change to ul, li */
