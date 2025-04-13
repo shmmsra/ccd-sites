@@ -1068,6 +1068,11 @@ async function processSection(section, config, isDoc) {
     decorateIcons(section.el, config),
   ]);
   const loadBlocks = [...stylePromises];
+  if (section.preloadLinks.length) {
+    const [modals, blocks] = partition(section.preloadLinks, (block) => block.classList.contains('modal'));
+    await Promise.all(blocks.map((block) => loadBlock(block)));
+    modals.forEach((block) => loadBlock(block));
+  }
 
   section.blocks.forEach((block) => loadBlocks.push(loadBlock(block)));
 

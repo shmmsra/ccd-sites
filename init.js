@@ -1,3 +1,5 @@
+import(/* webpackMode: "eager" */ './blocks/adobetv/adobetv.js');
+import(/* webpackMode: "eager" */ './blocks/adobetv/adobetv.css');
 import(/* webpackMode: "eager" */ './blocks/aside/aside.js');
 import(/* webpackMode: "eager" */ './blocks/aside/aside.css');
 import(/* webpackMode: "eager" */ './blocks/cards/cards.js');
@@ -12,6 +14,8 @@ import(/* webpackMode: "eager" */ './blocks/header/header.js');
 import(/* webpackMode: "eager" */ './blocks/header/header.css');
 import(/* webpackMode: "eager" */ './blocks/hero/hero.js');
 import(/* webpackMode: "eager" */ './blocks/hero/hero.css');
+import(/* webpackMode: "eager" */ './blocks/iframe/iframe.js');
+import(/* webpackMode: "eager" */ './blocks/iframe/iframe.css');
 import(/* webpackMode: "eager" */ './blocks/fragment/fragment.js');
 import(/* webpackMode: "eager" */ './blocks/fragment/fragment.css');
 import(/* webpackMode: "eager" */ './blocks/footer/footer.js');
@@ -30,6 +34,9 @@ import(/* webpackMode: "eager" */ './blocks/section-metadata/sticky-section.js')
 import(/* webpackMode: "eager" */ './blocks/text/link-farms.css');
 import(/* webpackMode: "eager" */ './blocks/text/text.css');
 import(/* webpackMode: "eager" */ './blocks/text/text.js');
+import(/* webpackMode: "eager" */ './blocks/video/video.js');
+import(/* webpackMode: "eager" */ './blocks/video/video.css');
+import(/* webpackMode: "eager" */ './styles/iframe.css');
 import(/* webpackMode: "eager" */ './styles/rounded-corners.css');
 import(/* webpackMode: "eager" */ './utils/utils.js');
 

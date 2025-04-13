@@ -59,6 +59,7 @@ curl \
   * https://www.aem.live/docs/architecture
   * https://www.aem.live/docs/authoring
   * https://www.aem.live/docs/admin.html
+  * https://www.aem.live/docs/custom-headers
   * https://www.aem.live/developer/tutorial
   * https://www.aem.live/developer/indexing
   * https://www.aem.live/developer/spreadsheets
@@ -71,8 +72,11 @@ curl \
 ### AEM SideKick references:
   * https://sidekick-library--aem-block-collection--adobe.aem.page/tools/sidekick/library.html
   * https://sidekick-library--aem-block-collection--adobe.aem.page/block-collection/fragment-include
+### AEM Milo references:
+  * https://main--milo--adobecom.aem.page/docs/authoring/getting-started
 ### Github references:
   * https://github.com/adobe/helix-home
+  * https://github.com/adobe/helix-cli
   * https://github.com/adobe/aem-boilerplate
   * https://github.com/adobe/aem-block-collection
   * https://github.com/adobecom/milo
