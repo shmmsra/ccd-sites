@@ -7,14 +7,20 @@
                 return;
             }
 
-            const aemSites1 = document.createElement('aem-sites');
-            aemSites1.path = 'https://main--ccd-sites--shmmsra.aem.page/shmishra/creators-first-blade.plain.html';
-            // aemSites1.path = 'https://main--ccd-sites--shmmsra.aem.page/shmishra/editorial-cards-new-features-all-cards.plain.html';
-            document.body.appendChild(aemSites1);
+            const aemSitePages = [
+                'https://main--ccd-sites--shmmsra.aem.page/shmishra/ccd-home/firefly-cards-grid.plain.html',
+                'https://main--ccd-sites--shmmsra.aem.page/shmishra/campaign-pricing-zpattern-full-edu.plain.html',
+                'https://main--ccd-sites--shmmsra.aem.page/shmishra/editorial-cards-new-features-all-cards.plain.html',
+                'https://main--ccd-sites--shmmsra.aem.page/shmishra/explore-ai-features.plain.html',
+                'https://main--ccd-sites--shmmsra.aem.page/shmishra/creators-first-blade.plain.html',
+                'https://main--ccd-sites--shmmsra.aem.page/shmishra/ccd-home/firefly-card-1.plain.html',
+            ];
 
-            const aemSites2 = document.createElement('aem-sites');
-            aemSites2.path = 'https://main--ccd-sites--shmmsra.aem.page/shmishra/explore-ai-features.plain.html';
-            document.body.appendChild(aemSites2);
+            aemSitePages.forEach(path => {
+                const aemSites = document.createElement('aem-sites');
+                aemSites.path = path;
+                document.body.appendChild(aemSites);
+            });
         }
 
         window.addEventListener('load', loadAEMFragments);</script></head><body></body></html>
