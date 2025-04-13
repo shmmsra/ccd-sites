@@ -63,6 +63,7 @@ class AEMSites extends LitElement {
   async loadAEMFragment(url) {
     try {
       const baseUrl = new URL(url);
+      window.hlx = window.hlx || {};
       window.hlx.contentBaseRoot = baseUrl.origin;
 
       const response = await customFetch({ resource: url, withCacheRules: true });
