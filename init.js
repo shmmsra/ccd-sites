@@ -51,9 +51,24 @@ class AEMSites extends LitElement {
     path: { type: String },
   };
 
+  static styles = css`
+    :host {
+      display: block;
+      border: 4px solid blue;
+      position: relative;
+    }
+  `;
+
   constructor() {
     super();
     this.path = '';
+    this._handleKeyDown = this._handleKeyDown.bind(this);
+    this._handleKeyUp = this._handleKeyUp.bind(this);
+    this._handleMouseEnter = this._handleMouseEnter.bind(this);
+    this._handleMouseLeave = this._handleMouseLeave.bind(this);
+    this._showOverlay = this._showOverlay.bind(this);
+    this._hideOverlay = this._hideOverlay.bind(this);
+    this._copyPathToClipboard = this._copyPathToClipboard.bind(this);
   }
 
   async firstUpdated() {
@@ -84,6 +99,75 @@ class AEMSites extends LitElement {
     } catch (error) {
       console.error('Error loading fragment:', error);
     }
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('keydown', this._handleKeyDown);
+    window.addEventListener('keyup', this._handleKeyUp);
+    this.addEventListener('mouseenter', this._handleMouseEnter);
+    this.addEventListener('mouseleave', this._handleMouseLeave);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('keydown', this._handleKeyDown);
+    window.removeEventListener('keyup', this._handleKeyUp);
+    this.removeEventListener('mouseenter', this._handleMouseEnter);
+    this.removeEventListener('mouseleave', this._handleMouseLeave);
+  }
+
+  _handleMouseEnter() {
+    if (this._isMetaPressed) {
+      this._showOverlay();
+    }
+  }
+
+  _handleMouseLeave() {
+    this._hideOverlay();
+  }
+
+  _handleKeyDown(event) {
+    if (event.key === 'Meta') {
+      this._isMetaPressed = true;
+    }
+  }
+
+  _handleKeyUp(event) {
+    if (event.key === 'Meta') {
+      this._isMetaPressed = false;
+      this._hideOverlay();
+    }
+  }
+
+  _showOverlay() {
+    const overlay = document.createElement('div');
+    overlay.style.position = 'absolute';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'rgba(0, 0, 255, 0.5)';
+    overlay.style.zIndex = '10';
+    overlay.style.cursor = 'pointer';
+    overlay.addEventListener('click', this._copyPathToClipboard);
+    this.appendChild(overlay);
+    this._overlay = overlay;
+  }
+
+  _hideOverlay() {
+    if (this._overlay) {
+      this.removeChild(this._overlay);
+      this._overlay = null;
+    }
+  }
+
+  _copyPathToClipboard() {
+    navigator.clipboard.writeText(this.path).then(() => {
+      console.log('Path copied to clipboard:', this.path);
+    }).catch(err => {
+      console.error('Failed to copy path:', err);
+    });
   }
 
   render() {
