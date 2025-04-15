@@ -30,10 +30,21 @@
             aemSitePages.forEach(path => {
                 const aemSites = document.createElement('aem-sites');
                 aemSites.path = path;
+                if (window.debug) {
+                    aemSites.setAttribute('debug', 'true');
+                }
                 document.body.appendChild(aemSites);
             });
         }
 
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'D' && event.shiftKey && event.ctrlKey) {
+                window.debug = !window.debug;
+                console.log('Debug mode:', window.debug);
+            }
+        });
+
+        window.debug = true;
         window.addEventListener('load', loadAEMFragments);
     </script>
 </head>

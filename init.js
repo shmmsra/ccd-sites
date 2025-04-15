@@ -54,7 +54,6 @@ class AEMSites extends LitElement {
   static styles = css`
     :host {
       display: block;
-      border: 4px solid blue;
       position: relative;
     }
   `;
@@ -103,18 +102,22 @@ class AEMSites extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('keydown', this._handleKeyDown);
-    window.addEventListener('keyup', this._handleKeyUp);
-    this.addEventListener('mouseenter', this._handleMouseEnter);
-    this.addEventListener('mouseleave', this._handleMouseLeave);
+    if (this.hasAttribute('debug')) {
+      window.addEventListener('keydown', this._handleKeyDown);
+      window.addEventListener('keyup', this._handleKeyUp);
+      this.addEventListener('mouseenter', this._handleMouseEnter);
+      this.addEventListener('mouseleave', this._handleMouseLeave);
+    }
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    window.removeEventListener('keydown', this._handleKeyDown);
-    window.removeEventListener('keyup', this._handleKeyUp);
-    this.removeEventListener('mouseenter', this._handleMouseEnter);
-    this.removeEventListener('mouseleave', this._handleMouseLeave);
+    if (this.hasAttribute('debug')) {
+      window.removeEventListener('keydown', this._handleKeyDown);
+      window.removeEventListener('keyup', this._handleKeyUp);
+      this.removeEventListener('mouseenter', this._handleMouseEnter);
+      this.removeEventListener('mouseleave', this._handleMouseLeave);
+    }
   }
 
   _handleMouseEnter() {
