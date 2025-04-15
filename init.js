@@ -102,7 +102,8 @@ class AEMSites extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.hasAttribute('debug')) {
+    const isDebug = this.getAttribute('debug') !== 'false';
+    if (isDebug) {
       window.addEventListener('keydown', this._handleKeyDown);
       window.addEventListener('keyup', this._handleKeyUp);
       this.addEventListener('mouseenter', this._handleMouseEnter);
@@ -112,7 +113,8 @@ class AEMSites extends LitElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this.hasAttribute('debug')) {
+    const isDebug = this.getAttribute('debug') !== 'false';
+    if (isDebug) {
       window.removeEventListener('keydown', this._handleKeyDown);
       window.removeEventListener('keyup', this._handleKeyUp);
       this.removeEventListener('mouseenter', this._handleMouseEnter);
