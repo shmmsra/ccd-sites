@@ -155,7 +155,14 @@ class AEMSites extends LitElement {
     overlay.style.backgroundColor = 'rgba(0, 0, 255, 0.5)';
     overlay.style.zIndex = '10';
     overlay.style.cursor = 'pointer';
-    overlay.addEventListener('click', this._copyPathToClipboard);
+    overlay.addEventListener('click', () => {
+      this._copyPathToClipboard();
+      overlay.style.transition = 'background-color 0.2s';
+      overlay.style.backgroundColor = 'rgba(0, 0, 255, 0)';
+      setTimeout(() => {
+        overlay.style.backgroundColor = 'rgba(0, 0, 255, 0.5)';
+      }, 200);
+    });
     this.appendChild(overlay);
     this._overlay = overlay;
   }
